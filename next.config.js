@@ -4,7 +4,7 @@ const nextConfig = {
     runtime: 'experimental-edge',
   },
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   output: 'standalone'
 }
 
