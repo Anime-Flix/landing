@@ -1,4 +1,3 @@
-import '../styles/globals.css'
 
 import { NextUIProvider, createTheme } from '@nextui-org/react'
 import NavbarComponent from '../components/navbar'
