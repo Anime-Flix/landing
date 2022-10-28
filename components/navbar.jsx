@@ -1,15 +1,58 @@
-import { Navbar, Text, Button, Spacer, Container, Avatar } from '@nextui-org/react';
-import { useSession } from '@supabase/auth-helpers-react'
-import { url } from './Avatar'
+import { Navbar, Text, Button, Spacer, Container, Avatar, Dropdown } from '@nextui-org/react';
+import { useSession, useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
+
+import { useEffect, useState } from 'react'
+import { RiUser3Fill } from 'react-icons/ri'
 
 import Link from 'next/link';
-import Cookies from 'js-cookie'
 
 const NavbarComponent = () => {
 
     const session = useSession()
+    const [userAvatar, setUserAvatar] = useState(null)
+    const supabase = useSupabaseClient()
+    const user = useUser()
+    const [loading, setLoading] = useState(true)
+    const [username, setUsername] = useState(null)
+    const [website, setWebsite] = useState(null)
+    const [avatar_url, setAvatarUrl] = useState(null)
 
-    const avatar = Cookies.get('avatar');
+    async function getUserAvatar() {
+      let img = await fetch('https://api.waifu.pics/sfw/smile').then((resp) => resp.json());
+      setUserAvatar(img.url)
+    }
+
+    useEffect(() => {
+      getUserAvatar()
+      getProfile()
+    }, [session])
+
+    async function getProfile() {
+      try {
+        setLoading(true)
+
+        let { data, error, status } = await supabase
+          .from('profiles')
+          .select(`username, website, avatar_url`)
+          .eq('id', user.id)
+          .single()
+
+        if (error && status !== 406) {
+          throw error
+        }
+        console.log(data);
+        if (data) {
+          setUsername(data.username)
+          setWebsite(data.website)
+          setAvatarUrl(data.avatar_url)
+        }
+      } catch (error) {
+        console.log('Error loading user data!')
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
     const collapseItems = [
       ["Home", "/"],
@@ -34,9 +77,40 @@ const NavbarComponent = () => {
                   Go to app
                 </Button>
                 <Navbar.Item>
-                  <Link href="/user" style={{cursor: 'pointer'}}>
-                    <Avatar style={{cursor: 'pointer'}} src={avatar} size="md" />
-                  </Link>
+                    <Dropdown placement="bottom-right">
+                      <Dropdown.Trigger>
+                        <Avatar style={{cursor: 'pointer'}} squared src={userAvatar} />
+                      </Dropdown.Trigger>
+                      <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
+                        <Dropdown.Item key="profile" css={{ height: "$18" }} href="/profile">
+                          <Link href="/profile" style={{color: 'white'}}>
+                            <div>
+                            <Text b color="inherit" css={{ d: "flex" }}>
+                              Signed in as
+                            </Text>
+                            <Text b color="inherit" css={{ d: "flex" }}>
+                              {username}
+                            </Text>
+                            </div>
+                          </Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item key="settings" withDivider>
+                          <Link href="/profile/settings" style={{color: 'white'}}>
+                            My Settings
+                          </Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item key="list">
+                          <Link href="/profile/list/anime" style={{color: 'white'}}>
+                            Anime List
+                          </Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item key="help_and_feedback" withDivider>
+                          <Link href="/help" style={{color: 'white'}}>
+                            Anime List
+                          </Link>
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                 </Navbar.Item>
               </Navbar.Content>
             ) : (

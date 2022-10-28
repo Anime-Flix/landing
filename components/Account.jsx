@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 
-import { Input, Spacer, Button, Loading } from '@nextui-org/react';
-import Avatar from './Avatar'
+import { Input, Spacer, Button, Loading, Image, Dropdown } from '@nextui-org/react';
+
 
 export default function Account({ session }) {
   const supabase = useSupabaseClient()
@@ -68,17 +68,22 @@ export default function Account({ session }) {
 
   return (
     <div className="form-widget">
-      <center>
-        <Avatar
-          uid={user.id}
-          url={avatar_url}
-          size={150}
-          onUpload={(url) => {
-            setAvatarUrl(url)
-            updateProfile({ username, website, avatar_url: url })
-          }}
-        />
-      </center>
+        <Dropdown>
+          <Dropdown.Trigger>
+            <Image
+              style={{cursor: 'pointer'}}
+              width={320}
+              height={180}
+              src="https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
+              alt="Default Image"
+              objectFit="cover"
+            />
+          </Dropdown.Trigger>
+          <Dropdown.Menu aria-label="Dynamic Actions">
+            <Dropdown.Item key="change">Change Avatar</Dropdown.Item>
+            <Dropdown.Item key="remove">Remove Avatar</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       <Spacer y={2.5} />
       <div>
         <Input css={{minWidth: '100%'}} labelPlaceholder="Email" value={session.user.email} disabled />
