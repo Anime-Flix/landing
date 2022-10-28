@@ -1,10 +1,16 @@
-import { Spacer, Text, Grid } from '@nextui-org/react';
-import CardComponent from '../../components/card.jsx'
+import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import Head from "next/head"
+
+import { Spacer, Text, Grid } from '@nextui-org/react';
+
+const CardComponent = dynamic(() => import('../../components/card.jsx'), {
+  suspense: true
+})
 
 export default function Blog() {
     return (
-        <div>
+        <Suspense fallback={`Loading...`}>
             <Head>
                 <title>Blog - AniFlix</title>
             </Head>
@@ -38,6 +44,6 @@ export default function Blog() {
 
             <Spacer y={3.5} />
 
-        </div>
+        </Suspense>
     )
 }

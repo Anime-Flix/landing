@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 
-import { Input, Spacer, Button, Loading, Image, Dropdown } from '@nextui-org/react';
+import { Input, Spacer, Button, Loading, Dropdown } from '@nextui-org/react';
 
 
 export default function Account({ session }) {
@@ -70,7 +70,7 @@ export default function Account({ session }) {
     <div className="form-widget">
         <Dropdown>
           <Dropdown.Trigger>
-            <Image
+            <img
               style={{cursor: 'pointer'}}
               width={320}
               height={180}

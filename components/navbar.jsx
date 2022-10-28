@@ -82,8 +82,8 @@ const NavbarComponent = () => {
                         <Avatar style={{cursor: 'pointer'}} squared src={userAvatar} />
                       </Dropdown.Trigger>
                       <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
-                        <Dropdown.Item key="profile" css={{ height: "$18" }} href="/profile">
-                          <Link href="/profile" style={{color: 'white'}}>
+                        <Dropdown.Item key="profile" css={{ height: "$18" }}>
+                          <Link href="/profile" style={{color: 'white', width: '100%'}}>
                             <div>
                             <Text b color="inherit" css={{ d: "flex" }}>
                               Signed in as
@@ -95,18 +95,18 @@ const NavbarComponent = () => {
                           </Link>
                         </Dropdown.Item>
                         <Dropdown.Item key="settings" withDivider>
-                          <Link href="/profile/settings" style={{color: 'white'}}>
+                          <Link href="/profile/settings" style={{color: 'white', width: '100%'}}>
                             My Settings
                           </Link>
                         </Dropdown.Item>
-                        <Dropdown.Item key="list">
-                          <Link href="/profile/list/anime" style={{color: 'white'}}>
+                        <Dropdown.Item key="list" style={{color: 'white', width: '100%'}}>
+                          <Link href="/profile/list/anime" style={{color: 'white', width: '100%'}}>
                             Anime List
                           </Link>
                         </Dropdown.Item>
                         <Dropdown.Item key="help_and_feedback" withDivider>
-                          <Link href="/help" style={{color: 'white'}}>
-                            Anime List
+                          <Link href="/help" style={{color: 'white', width: '100%'}}>
+                            Help & Feedback
                           </Link>
                         </Dropdown.Item>
                       </Dropdown.Menu>

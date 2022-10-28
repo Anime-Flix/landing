@@ -1,4 +1,3 @@
-import NavbarComponent from '../components/navbar';
 import Head from 'next/head';
 import Link from 'next/link'
 
@@ -15,11 +14,10 @@ export default function Home() {
       <Spacer y={3.5} />
 
       {/* Landing Hero */}
-      <section class="Hero" style={{margin: 15}}>
+      <section style={{margin: 15}}>
         <Text
           h1
           size={60}
-
           weight="bold"
         >
           AniFlix - The future of anime social
