@@ -24,12 +24,12 @@ function MyApp({ Component, pageProps }) {
         supabaseClient={supabaseClient}
         initialSession={pageProps.initialSession}
       >
-
+        <NextUIProvider theme={theme}>
           <NavbarComponent />
           <Container>
             <Component {...pageProps} />
           </Container>
-        
+        </NextUIProvider>
       </SessionContextProvider>
     </Suspense>
   )
