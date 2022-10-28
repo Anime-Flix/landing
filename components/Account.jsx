@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
+import Image from 'next/image'
 
 import { Input, Spacer, Button, Loading, Dropdown } from '@nextui-org/react';
 
@@ -14,7 +15,7 @@ export default function Account({ session }) {
 
   useEffect(() => {
     getProfile()
-  }, [session])
+  }, [session, getProfile])
 
   async function getProfile() {
     try {
@@ -70,7 +71,7 @@ export default function Account({ session }) {
     <div className="form-widget">
         <Dropdown>
           <Dropdown.Trigger>
-            <img
+            <Image
               style={{cursor: 'pointer'}}
               width={320}
               height={180}

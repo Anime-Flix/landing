@@ -25,7 +25,7 @@ const NavbarComponent = () => {
     useEffect(() => {
       getUserAvatar()
       getProfile()
-    }, [session])
+    }, [session, getProfile])
 
     async function getProfile() {
       try {
