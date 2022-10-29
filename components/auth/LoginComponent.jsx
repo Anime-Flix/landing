@@ -13,6 +13,7 @@ import Alert from "@mui/material/Alert";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 function LoginComponent() {
+  const captcha = React.useRef()
   const supabase = useSupabaseClient();
   const [loginError, setLoginError] = React.useState("");
 
@@ -36,7 +37,10 @@ function LoginComponent() {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: 'example@email.com',
       password: 'example-password',
+      options: { captchaToken },
     })
+    captcha.current.resetCaptcha()
+    
     if (error) return setLoginError(error.message);
 
     return;
@@ -80,6 +84,7 @@ function LoginComponent() {
           <div style={{ marginTop: 8, marginBottom: 8 }}>
             <HCaptcha
               size="normal"
+              ref={captcha}
               sitekey="7128bc3d-72cd-4daa-86bb-523ab1a4e821"
               onVerify={(token) => {
                 setCaptchaToken(token);
