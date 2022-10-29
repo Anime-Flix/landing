@@ -1,151 +1,202 @@
-import { Navbar, Text, Button, Spacer, Container, Avatar, Dropdown } from '@nextui-org/react';
-import { useSession, useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
-
-import { useEffect, useState } from 'react'
-import { RiUser3Fill } from 'react-icons/ri'
-
+import * as React from 'react';
+import { useRouter } from 'next/router'
 import Link from 'next/link';
 
-const NavbarComponent = () => {
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import LoginIcon from '@mui/icons-material/Login';
 
-    const session = useSession()
-    const [userAvatar, setUserAvatar] = useState(null)
-    const supabase = useSupabaseClient()
-    const user = useUser()
-    const [loading, setLoading] = useState(true)
-    const [username, setUsername] = useState(null)
-    const [website, setWebsite] = useState(null)
-    const [avatar_url, setAvatarUrl] = useState(null)
+import { useUser } from '@supabase/auth-helpers-react'
+import Image from 'next/image';
 
-    async function getUserAvatar() {
-      let img = await fetch('https://api.waifu.pics/sfw/smile').then((resp) => resp.json());
-      setUserAvatar(img.url)
-    }
+const pages = [['Home', '/'], ['Blog', '/blog'], ['About', '/about'], ['Contact', '/contact']];
+const settings = [['Profile', '/profile'], ['Account', '/account'], ['Anime List', '/profile/list'], ['Logout', '/auth/logout']];
+const settingsno = [['Sign in', '/auth/login'], ['Register', '/auth/register']];
 
-    useEffect(() => {
-      getUserAvatar()
-      getProfile()
-    }, [session])
+function ResponsiveAppBar() {
+  const user = useUser();
+  const router = useRouter()
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-    async function getProfile() {
-      try {
-        setLoading(true)
+  // Menu Functions
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseNavMenu = (href) => {
+    router.push(href)
+    setAnchorElNav(null);
+  };
 
-        let { data, error, status } = await supabase
-          .from('profiles')
-          .select(`username, website, avatar_url`)
-          .eq('id', user.id)
-          .single()
+  // Page Router Functions
+  const handleCloseUserMenu = (href) => {
+    router.push(href)
+    setAnchorElUser(null);
+  };
 
-        if (error && status !== 406) {
-          throw error
-        }
-        console.log(data);
-        if (data) {
-          setUsername(data.username)
-          setWebsite(data.website)
-          setAvatarUrl(data.avatar_url)
-        }
-      } catch (error) {
-        console.log('Error loading user data!')
-        console.log(error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  return (
+    <AppBar position="sticky">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <Typography
+            variant="h6"
+            noWrap
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+              ANIFLIX
+          </Typography>
 
-    const collapseItems = [
-      ["Home", "/"],
-      ["Blog", "/blog"],
-      ["About", "/about"],
-      ["Contact", "/contact"],
-    ];
-    return (
-      <Navbar shouldHideOnScroll isBordered variant="fixed">
-        <Navbar.Brand>
-          <Navbar.Toggle aria-label="toggle navigation" />
-          <Spacer x={0.8} />
-          <Text b color="inherit" hideIn="xs">
-            ANI<span style={{color: '#9c27b0'}}>FLIX</span>
-          </Text>
-        </Navbar.Brand>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page[0]} onClick={() => handleCloseNavMenu(page[1])}>
+                  <Typography textAlign="center">{page[0]}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <Typography
+            variant="h5"
+            noWrap
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            ANIFLIX
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page[0]}
+                onClick={() => handleCloseNavMenu(page[1])}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page[0]}
+              </Button>
+            ))}
+          </Box>
 
           {
-            session ? (
-              <Navbar.Content>
-                <Button auto flat href="#">
-                  Go to app
-                </Button>
-                <Navbar.Item>
-                    <Dropdown placement="bottom-right">
-                      <Dropdown.Trigger>
-                        <Avatar style={{cursor: 'pointer'}} squared src={userAvatar} />
-                      </Dropdown.Trigger>
-                      <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
-                        <Dropdown.Item key="profile" css={{ height: "$18" }}>
-                          <Link href="/profile" style={{color: 'white', width: '100%'}}>
-                            <div>
-                            <Text b color="inherit" css={{ d: "flex" }}>
-                              Signed in as
-                            </Text>
-                            <Text b color="inherit" css={{ d: "flex" }}>
-                              {username}
-                            </Text>
-                            </div>
-                          </Link>
-                        </Dropdown.Item>
-                        <Dropdown.Item key="settings" withDivider>
-                          <Link href="/profile/settings" style={{color: 'white', width: '100%'}}>
-                            My Settings
-                          </Link>
-                        </Dropdown.Item>
-                        <Dropdown.Item key="list" style={{color: 'white', width: '100%'}}>
-                          <Link href="/profile/list/anime" style={{color: 'white', width: '100%'}}>
-                            Anime List
-                          </Link>
-                        </Dropdown.Item>
-                        <Dropdown.Item key="help_and_feedback" withDivider>
-                          <Link href="/help" style={{color: 'white', width: '100%'}}>
-                            Help & Feedback
-                          </Link>
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                </Navbar.Item>
-              </Navbar.Content>
+            user ? (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting[0]} onClick={() => handleCloseUserMenu(setting[1])}>
+                      <Typography textAlign="center">{setting[0]}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
             ) : (
-              <Navbar.Content>
-              <Navbar.Link color="inherit" href="#">
-                Login
-              </Navbar.Link>
-              <Navbar.Item>
-                <Button auto flat as={Link} href="#">
-                  Sign Up
-                </Button>
-              </Navbar.Item>
-              </Navbar.Content>
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <LoginIcon style={{color: 'white'}} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settingsno.map((setting) => (
+                    <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting[1])}>
+                      <Typography textAlign="center">{setting[0]}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
             )
           }
-
-        <Navbar.Collapse>
-          <Container>
-            {collapseItems.map((item, index) => (
-              <Navbar.CollapseItem key={item}>
-                <Link
-                  style={{color: 'white'}}
-                  css={{
-                    minWidth: "100%",
-                  }}
-                  href={item[1]}
-                >
-                  {item[0]}
-                </Link>
-              </Navbar.CollapseItem>
-            ))}
-          </Container>
-        </Navbar.Collapse>
-      </Navbar>
-    )
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
 }
-
-export default NavbarComponent;
+export default ResponsiveAppBar;
