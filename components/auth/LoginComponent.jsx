@@ -35,8 +35,8 @@ function LoginComponent() {
   // Sign in with email and password
   const handleEmailAuth = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'example@email.com',
-      password: 'example-password',
+      email: userEmail,
+      password: userPassword,
       options: { captchaToken },
     })
     captcha.current.resetCaptcha()

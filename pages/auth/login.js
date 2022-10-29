@@ -41,7 +41,11 @@ export default function LoginPage() {
       ) : (
         <div></div>
       )}
-      <LoginComponent />
+      <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          theme="dark"
+        />
     </Container>
   );
 }
