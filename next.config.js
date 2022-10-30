@@ -2,8 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  compress: true,
   images: {
-    domains: ['lh3.googleusercontent.com']
+    domains: ['googleusercontent.com']
   }
 }
 

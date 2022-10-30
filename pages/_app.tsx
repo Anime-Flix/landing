@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AuthContextProvider } from "../context/AuthContext";
+import NavbarComponent from "../components/core/Navbar";
 
 // Site theme
 const theme = createTheme({
@@ -16,7 +17,16 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <AuthContextProvider>
         <CssBaseline enableColorScheme />
-        <Component {...pageProps} />
+
+        {/* Navbar */}
+        <NavbarComponent />
+
+        {/* Main content */}
+        <main className="application">
+          <Component {...pageProps} />
+        </main>
+
+        {/* Footer */}
       </AuthContextProvider>
     </ThemeProvider>
   );

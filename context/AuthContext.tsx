@@ -16,6 +16,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
+import LoadingComponent from "../components/core/Loading";
 
 const AuthContext = createContext<any>({});
 
@@ -35,6 +36,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           displayName: user.displayName,
           profilePicture: user.photoURL,
           provider: user.providerData,
+          verified: user.emailVerified
         });
       } else {
         setUser(null);
@@ -52,7 +54,12 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   // Sign In Function
   const handleSignIn = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCred) => console.log('Logged In!'))
+      .catch((error) => {
+        setAuthError(error.message)
+      })
+      return
   };
 
   // Sign In (Google) Function
@@ -90,7 +97,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       .catch((error) => {
         if (error.code === "auth/account-exists-with-different-credential")
           return setAuthError(
-            "Error 409: There is an email account on the platform for this user. If you want to link the account, so you can log in later, go to your account settings section and sign in."
+            "Error 409: There is an email account on the platform for this user."
           );
 
         return;
@@ -140,7 +147,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         handleLinkProviders,
       }}
     >
-      {loading ? null : children}
+      {loading ? <LoadingComponent /> : children}
     </AuthContext.Provider>
   );
 };
