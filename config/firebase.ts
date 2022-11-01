@@ -24,7 +24,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Firebase Analytics
-// export const analytics = getAnalytics(app);
+const analytics = getAnalytics(app);
 
 // Firebase Authentication
 export const auth = getAuth(app);
