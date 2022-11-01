@@ -16,11 +16,11 @@ const theme = createTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      analytics();
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (process.env.NODE_ENV === 'production') {
+  //     analytics();
+  //   }
+  // }, [])
   
   return (
     <ThemeProvider theme={theme}>
